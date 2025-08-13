@@ -1,0 +1,25 @@
+# Complete Firebase Configuration for Imbokodo Project
+# Copy this file to .env.local in your project root
+
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+
+# Note: The following values are already configured in lib/firebase.ts:
+# - authDomain: imbokodo-b6624.firebaseapp.com
+# - projectId: imbokodo-b6624
+# - storageBucket: imbokodo-b6624.appspot.com
+# - messagingSenderId: 339522771147
+# - appId: 1:339522771147:web:d75757b21786aa4723234e
+
+# You only need to add your API key from Firebase Console
+# To get your API key:
+# 1. Go to https://console.firebase.google.com/
+# 2. Select project: imbokodo-b6624
+# 3. Click the gear icon ⚙️ next to "Project Overview"
+# 4. Select "Project settings"
+# 5. Scroll down to "Your apps" section
+# 6. Click on your web app
+# 7. Copy the "apiKey" value
+
+# Example .env.local file should look like:
+# NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyC_YourActualAPIKeyHere 

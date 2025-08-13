@@ -1,0 +1,138 @@
+import { useState, useEffect } from 'react';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  User
+} from 'firebase/auth';
+import { 
+  doc, 
+  setDoc, 
+  getDoc, 
+  collection, 
+  addDoc, 
+  updateDoc,
+  query,
+  where,
+  getDocs
+} from 'firebase/firestore';
+import { auth, db } from '../lib/firebase';
+
+export const useFirebase = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const signIn = async (email: string, password: string) => {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      return { success: true, user: result.user };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const signUp = async (email: string, password: string, userData: any) => {
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Create user profile in Firestore
+      await setDoc(doc(db, 'users', result.user.uid), {
+        ...userData,
+        email,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+
+      return { success: true, user: result.user };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const createDocument = async (collectionName: string, data: any) => {
+    try {
+      const docRef = await addDoc(collection(db, collectionName), {
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+      return { success: true, id: docRef.id };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const updateDocument = async (collectionName: string, docId: string, data: any) => {
+    try {
+      await updateDoc(doc(db, collectionName, docId), {
+        ...data,
+        updatedAt: new Date()
+      });
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const getDocument = async (collectionName: string, docId: string) => {
+    try {
+      const docRef = doc(db, collectionName, docId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        return { success: true, data: { id: docSnap.id, ...docSnap.data() } };
+      } else {
+        return { success: false, error: 'Document not found' };
+      }
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const queryDocuments = async (collectionName: string, field: string, operator: any, value: any) => {
+    try {
+      const q = query(collection(db, collectionName), where(field, operator, value));
+      const querySnapshot = await getDocs(q);
+      
+      const documents: any[] = [];
+      querySnapshot.forEach((doc) => {
+        documents.push({ id: doc.id, ...doc.data() });
+      });
+      
+      return { success: true, data: documents };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  return {
+    user,
+    loading,
+    signIn,
+    signUp,
+    logout,
+    createDocument,
+    updateDocument,
+    getDocument,
+    queryDocuments
+  };
+}; 
