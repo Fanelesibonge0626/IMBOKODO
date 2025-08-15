@@ -13,7 +13,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "HealthyHer Connect - Empowering Women in KwaZulu-Natal",
+  title: "SheCare - Empowering Women in KwaZulu-Natal",
   description: "Find Clinics, Track Your Cycle, Support Your Mind, and Share Your Voice — All Free",
 };
 

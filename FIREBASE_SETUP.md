@@ -31,24 +31,17 @@ Create a `.env.local` file in your project root with just this one variable:
 
 ```bash
 # Firebase Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=your_actual_api_key_here
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyB8pveRiKbJZShCVnW5WlxNbsTOAIFhsq4
 ```
 
 **Already configured in `lib/firebase.ts`:**
-- ✅ Project ID: `imbokodo-b6624`
-- ✅ Auth Domain: `imbokodo-b6624.firebaseapp.com`
-- ✅ Storage Bucket: `imbokodo-b6624.appspot.com`
-- ✅ Messaging Sender ID: `339522771147`
-- ✅ App ID: `1:339522771147:web:d75757b21786aa4723234e`
+- ✅ Project ID: `myweb-c4c25`
+- ✅ Auth Domain: `myweb-c4c25.firebaseapp.com`
+- ✅ Storage Bucket: `myweb-c4c25.appspot.com`
+- ✅ Messaging Sender ID: `413167663570`
+- ✅ App ID: `1:413167663570:web:d755c70c18babd728b700b`
 
-**To get your API key:**
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Select project: **imbokodo-b6624**
-3. Click the gear icon ⚙️ next to "Project Overview"
-4. Select "Project settings"
-5. Scroll down to "Your apps" section
-6. Click on your web app
-7. Copy the "apiKey" value (starts with `AIzaSyC...`)
+**Your API key is:** `AIzaSyB8pveRiKbJZShCVnW5WlxNbsTOAIFhsq4`
 
 ### 3. Enable Authentication in Firebase
 

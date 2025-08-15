@@ -58,66 +58,82 @@ export default function Home() {
         </div>
 
         {/* Guardian Silhouette */}
-        <div className="absolute right-0 top-0 h-full w-1/2 opacity-20">
+        <div className="absolute right-0 top-0 h-full w-1/3 flex items-center justify-center">
           <img
             src="https://readdy.ai/api/search-image?query=African%20woman%20healthcare%20guardian%20silhouette%2C%20protective%20stance%2C%20medical%20care%20symbol%2C%20purple%20and%20pink%20gradient%20background%2C%20modern%20minimalist%20design%2C%20health%20protection%20theme%2C%20inspiring%20and%20empowering&width=800&height=1200&seq=guardian-silhouette&orientation=portrait"
-            alt="HealthyHer Guardian"
-            className="h-full w-full object-cover object-center"
+            alt="SheCare"
+            className="h-full w-full object-cover opacity-20"
           />
         </div>
 
-        <div className="relative z-10 flex items-center min-h-screen">
-          <div className="container mx-auto px-6">
-            <div className="max-w-2xl">
-              {/* Badge */}
-              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-8">
-                <span className="text-white/90 font-medium">🛡️ Your Health Guardian</span>
-              </div>
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Health Shield */}
+          <div className="absolute top-20 right-20 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float">
+            <span className="text-white/90 font-medium">🛡️ Your SheCare</span>
+          </div>
 
-              {/* Main Title */}
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                {getTranslation('heroTitle', currentLanguage).split(' ')[0]}
-                <span className="block bg-gradient-to-r from-pink-300 to-white bg-clip-text text-transparent">
-                  {getTranslation('heroTitle', currentLanguage).split(' ')[1]}
-                </span>
-              </h1>
+          {/* Cycle Tracker */}
+          <div className="absolute top-40 right-40 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float-delayed">
+            <span className="text-white/90 font-medium">📅 Cycle Tracker</span>
+          </div>
 
-              {/* Mission Statement */}
-              <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
-                {getTranslation('heroSubtitle', currentLanguage)}
-              </p>
-
-              {/* Description */}
-              <p className="text-lg text-white/80 mb-12 max-w-xl">
-                {getTranslation('heroDescription', currentLanguage)}
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/auth"
-                  className="group inline-flex items-center justify-center bg-white text-purple-700 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-pink-50 hover:shadow-xl hover:scale-105"
-                >
-                  <i className="fas fa-user-plus mr-3 text-xl"></i>
-                  {getTranslation('getStarted', currentLanguage)}
-                  <i className="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
-                </Link>
-                <Link
-                  href="/ai-health"
-                  className="group inline-flex items-center justify-center bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:bg-white/20 hover:border-white/50"
-                >
-                  <i className="fas fa-brain mr-3 text-xl"></i>
-                  {getTranslation('aiHealthAssistant', currentLanguage)}
-                </Link>
-              </div>
-            </div>
+          {/* Community */}
+          <div className="absolute top-60 right-60 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float">
+            <span className="text-white/90 font-medium">👥 Community</span>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
+        {/* Main Content */}
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            {getTranslation('heroTitle', currentLanguage)}
+          </h1>
+
+          {/* Mission Statement */}
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+            {getTranslation('missionDescription', currentLanguage)}
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/auth"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              {getTranslation('getStarted', currentLanguage)}
+            </Link>
+            <Link
+              href="/community"
+              className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
+            >
+              {getTranslation('learnMore', currentLanguage)}
+            </Link>
+          </div>
+
+          {/* Admin Access Section */}
+          <div className="mt-12 text-center">
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 max-w-md mx-auto">
+              <div className="flex items-center justify-center mb-4">
+                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 mr-3">
+                  <i className="fas fa-hospital text-white text-2xl"></i>
+                </div>
+                <div className="text-left">
+                  <h3 className="text-xl font-semibold text-white">Clinic Administration</h3>
+                  <p className="text-white/80 text-sm">Staff Access Only</p>
+                </div>
+              </div>
+              <p className="text-white/90 mb-6 text-sm">
+                Manage Durban Women's Health Clinic bookings, appointments, and patient records
+              </p>
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
+              >
+                <i className="fas fa-shield-alt mr-2"></i>
+                Access Admin Panel
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -131,7 +147,7 @@ export default function Home() {
               <span className="font-medium">🛡️ Comprehensive Health Protection</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Your Complete Health Guardian
+              Your Complete SheCare
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Advanced AI-powered healthcare support designed to protect and empower women in our community

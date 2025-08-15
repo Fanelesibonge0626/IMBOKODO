@@ -184,7 +184,7 @@ export default function PreventiveCarePage() {
         progress: 1,
         target: 1,
         unit: 'check',
-        badge: '🩺 Health Guardian',
+        badge: '🩺 SheCare',
         points: 200,
         icon: 'fas fa-clipboard-check',
         color: 'from-red-400 to-red-600',

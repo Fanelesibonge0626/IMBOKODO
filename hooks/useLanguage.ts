@@ -8,26 +8,20 @@ export const useLanguage = () => {
 
   useEffect(() => {
     // Load saved language from localStorage
-    const savedLanguage = localStorage.getItem('healthyher-language');
+    const savedLanguage = localStorage.getItem('shecare-language');
     if (savedLanguage) {
       setCurrentLanguage(savedLanguage);
-    } else {
-      // Try to detect browser language
-      const browserLang = navigator.language.split('-')[0];
-      const supportedLanguages = ['en', 'zu', 'xh', 'af', 'st', 'tn', 'ss', 've', 'ts', 'nr', 'nso'];
-      if (supportedLanguages.includes(browserLang)) {
-        setCurrentLanguage(browserLang);
-      }
     }
   }, []);
 
   const changeLanguage = (language: string) => {
     setCurrentLanguage(language);
-    localStorage.setItem('healthyher-language', language);
+    // Save language preference to localStorage
+    localStorage.setItem('shecare-language', language);
   };
 
   return {
     currentLanguage,
-    changeLanguage
+    changeLanguage,
   };
 };

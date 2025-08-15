@@ -30,7 +30,7 @@ export const translations = {
     challenges: 'Challenges',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Empowering women with AI-powered health insights, preventive care, and comprehensive maternal support — protecting your health journey',
     heroDescription: 'Sawubona Sisi! Your intelligent health guardian providing personalized care, early risk detection, and community support.',
     getStarted: 'Get Started',
@@ -52,7 +52,7 @@ export const translations = {
     // Mission
     ourMission: 'Our Mission',
     missionTitle: 'Protecting Every Woman\'s Health Journey',
-    missionDescription: 'HealthyHer Guardian combines advanced AI technology with community care to provide personalized health protection, early risk detection, and comprehensive maternal support for women in KwaZulu-Natal.',
+    missionDescription: 'SheCare combines advanced AI technology with community care to provide personalized health protection, early risk detection, and comprehensive maternal support for women in KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'AI Powered Health Assistant',
@@ -81,7 +81,7 @@ export const translations = {
     challenges: 'Izinselelo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Sinikeza abesifazane amandla ngolwazi lwezempilo oluqhutshwa yi-AI, ukunakekelwa okuvimbayo, nokusekelwa okubanzi kokuzala — sivikela uhambo lwakho lwezempilo',
     heroDescription: 'Sawubona Sisi! Umgcini wakho wezempilo ohlakaniphile onikeza ukunakekelwa komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa komphakathi.',
     getStarted: 'Qala',
@@ -103,7 +103,7 @@ export const translations = {
     // Mission
     ourMission: 'Umsebenzi Wethu',
     missionTitle: 'Ukuvikela Uhambo Lwezempilo Lwawo Wonke Owesifazane',
-    missionDescription: 'I-HealthyHer Guardian ihlanganisa ubuchwepheshe be-AI obuthuthukile nokunakekelwa komphakathi ukunikeza ukuvikelwa kwezempilo komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa okubanzi kokuzala kwabesifazane eKwaZulu-Natal.',
+    missionDescription: 'I-SheCare ihlanganisa ubuchwepheshe be-AI obuthuthukile nokunakekelwa komphakathi ukunikeza ukuvikelwa kwezempilo komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa okubanzi kokuzala kwabesifazane eKwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Umsizi Wezempilo Oqhutshwa yi-AI',
@@ -132,7 +132,7 @@ export const translations = {
     challenges: 'Imingeni',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Ukuxhobisa abafazi ngolwazi lwezempilo oluqhutywa yi-AI, ukhathalelo oluthintela izifo, kunye nenkxaso ebanzi yokuzala — ukukhusela uhambo lwakho lwezempilo',
     heroDescription: 'Molo Sisi! Umgcini wakho wezempilo okrelekrele onika ukhathalelo lomntu ngamnye, ukubona umngcipheko kwangethuba, kunye nenkxaso yoluntu.',
     getStarted: 'Qala',
@@ -154,7 +154,7 @@ export const translations = {
     // Mission
     ourMission: 'Injongo Yethu',
     missionTitle: 'Ukukhusela Uhambo Lwezempilo Lomntu Wonke Ongumfazi',
-    missionDescription: 'I-HealthyHer Guardian idibanisa iteknoloji ye-AI ephucukileyo kunye nokhathalelo loluntu ukunika ukukhuseleka kwezempilo komntu ngamnye, ukubona umngcipheko kwangethuba, kunye nenkxaso ebanzi yokuzala kubafazi baseKwaZulu-Natal.',
+    missionDescription: 'I-SheCare idibanisa iteknoloji ye-AI ephucukileyo kunye nokhathalelo loluntu ukunika ukukhuseleka kwezempilo komntu ngamnye, ukubona umngcipheko kwangethuba, kunye nenkxaso ebanzi yokuzala kubafazi baseKwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Umncedisi Wezempilo Oqhutywa yi-AI',
@@ -183,7 +183,7 @@ export const translations = {
     challenges: 'Uitdagings',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Bemagtiging van vroue met KI-gedrewe gesondheidsinsigte, voorkomende sorg, en omvattende moederlike ondersteuning — beskerm jou gesondheidsreis',
     heroDescription: 'Hallo Sus! Jou intelligente gesondheidsbewaker wat persoonlike sorg, vroeë risikodeteksie, en gemeenskapsondersteuning bied.',
     getStarted: 'Begin',
@@ -205,7 +205,7 @@ export const translations = {
     // Mission
     ourMission: 'Ons Missie',
     missionTitle: 'Beskerming van Elke Vrou se Gesondheidsreis',
-    missionDescription: 'HealthyHer Guardian kombineer gevorderde KI-tegnologie met gemeenskapssorg om persoonlike gesondheidbeskerming, vroeë risikodeteksie, en omvattende moederlike ondersteuning vir vroue in KwaZulu-Natal te bied.',
+    missionDescription: 'SheCare kombineer gevorderde KI-tegnologie met gemeenskapssorg om persoonlike gesondheidbeskerming, vroeë risikodeteksie, en omvattende moederlike ondersteuning vir vroue in KwaZulu-Natal te bied.',
     
     // Stats
     aiPowered: 'KI-gedrewe Gesondheidsassistent',
@@ -234,7 +234,7 @@ export const translations = {
     challenges: 'Diphephetso',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Ho matlafatsa basadi ka tsebo ya bophelo e tsamaiswang ke AI, tlhokomelo e thibelang, le tshehetso e felletseng ya bomme — ho sireletsa leeto la hao la bophelo',
     heroDescription: 'Dumela Sesi! Mohlokomedi wa hao wa bophelo ya bohlale ya fanang ka tlhokomelo ya motho ka mong, ho bona kotsi pele, le tshehetso ya setjhaba.',
     getStarted: 'Qala',
@@ -256,7 +256,7 @@ export const translations = {
     // Mission
     ourMission: 'Boikarabelo ba Rona',
     missionTitle: 'Ho Sireletsa Leeto la Bophelo la Mosadi e Mong le e Mong',
-    missionDescription: 'HealthyHer Guardian e kopanya theknoloji e tsoetseng pele ya AI le tlhokomelo ya setjhaba ho fana ka tshireletso ya bophelo ya motho ka mong, ho bona kotsi pele, le tshehetso e felletseng ya bomme ho basadi ba KwaZulu-Natal.',
+    missionDescription: 'SheCare e kopanya theknoloji e tsoetseng pele ya AI le tlhokomelo ya setjhaba ho fana ka tshireletso ya bophelo ya motho ka mong, ho bona kotsi pele, le tshehetso e felletseng ya bomme ho basadi ba KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Mothusi wa Bophelo o Tsamaiswang ke AI',
@@ -285,7 +285,7 @@ export const translations = {
     challenges: 'Dikgwetlho',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Go nonotsha basadi ka kitso ya boitekanelo e e kaelwang ke AI, tlhokomelo e e thibang, le tshegetso e e feletseng ya bomme — go sireletsa loeto lwa gago lwa boitekanelo',
     heroDescription: 'Dumelang Kgaitsadi! Molebedi wa gago wa boitekanelo yo o botlhale yo o fanang ka tlhokomelo ya motho mongwe le mongwe, go bona kotsi pele ga nako, le tshegetso ya setshaba.',
     getStarted: 'Simolola',
@@ -307,7 +307,7 @@ export const translations = {
     // Mission
     ourMission: 'Maikaelelo a Rona',
     missionTitle: 'Go Sireletsa Loeto lwa Boitekanelo lwa Mosadi mongwe le mongwe',
-    missionDescription: 'HealthyHer Guardian e kopanya thekenoloji e e tswetseng pele ya AI le tlhokomelo ya setshaba go neela tshireletso ya boitekanelo ya motho mongwe le mongwe, go bona kotsi pele ga nako, le tshegetso e e feletseng ya bomme mo basading ba KwaZulu-Natal.',
+    missionDescription: 'SheCare e kopanya thekenoloji e e tswetseng pele ya AI le tlhokomelo ya setshaba go neela tshireletso ya boitekanelo ya motho mongwe le mongwe, go bona kotsi pele ga nako, le tshegetso e e feletseng ya bomme mo basading ba KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Mothusi wa Boitekanelo o o Kaelwang ke AI',
@@ -336,7 +336,7 @@ export const translations = {
     challenges: 'Tinselelo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Kuniketa besifazane emandla ngelwati lempilo leliqhutjwa yi-AI, kunakekela lokuvimbela, kanye nekusekela lokuphelele kwekuzala — kuvikela luhambo lwakho lwempilo',
     heroDescription: 'Sawubona Sisi! Umgcini wakho wempilo lohlakaniphile loniketa kunakekela komuntfu ngamunye, kubona ingoti ngesikhathi, kanye nekusekela komphakathi.',
     getStarted: 'Cala',
@@ -358,7 +358,7 @@ export const translations = {
     // Mission
     ourMission: 'Umsebenzi Wetfu',
     missionTitle: 'Kuvikela Luhambo Lwempilo Lwasifazane Ngamunye',
-    missionDescription: 'I-HealthyHer Guardian ihlanganisa buchwepheshe be-AI lobuthuthukile kanye nekunakekela komphakathi kuniketa kuvikela kwempilo komuntfu ngamunye, kubona ingoti ngesikhathi, kanye nekusekela lokuphelele kwekuzala kubesifazane base-KwaZulu-Natal.',
+    missionDescription: 'I-SheCare ihlanganisa buchwepheshe be-AI lobuthuthukile kanye nekunakekela komphakathi kuniketa kuvikela kwempilo komuntfu ngamunye, kubona ingoti ngesikhathi, kanye nekusekela lokuphelele kwekuzala kubesifazane base-KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Umsiti Wempilo Loqhutjwa yi-AI',
@@ -387,7 +387,7 @@ export const translations = {
     challenges: 'Thaidzo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'U fhulufhedzisa vhafumakadzi nga ndivho ya mutakalo i shumisaho AI, u takalela u thivhelaho, na u thikhedzo ho fhelelaho ha vhomakoma — u tshitshavha lwendo lwanu lwa mutakalo',
     heroDescription: 'Ndaa Khotsi! Mulindi wanu wa mutakalo a re na vhuhwanwa a fanaho u takalela ha munwe na munwe, u vhona khombo nga u fhambana, na u thikhedzo ha tshitshavha.',
     getStarted: 'Thoma',
@@ -409,7 +409,7 @@ export const translations = {
     // Mission
     ourMission: 'Ndivho yasu',
     missionTitle: 'U tshitshavha Lwendo lwa Mutakalo lwa Mufumakadzi muṅwe na muṅwe',
-    missionDescription: 'HealthyHer Guardian i kanganyisa thekinolodzhi ya AI yo ḓoweleaho na u takalela ha tshitshavha u fana u tshitshavha ha mutakalo ha munwe na munwe, u vhona khombo nga u fhambana, na u thikhedzo ho fhelelaho ha vhomakoma kha vhafumakadzi vha KwaZulu-Natal.',
+    missionDescription: 'SheCare i kanganyisa thekinolodzhi ya AI yo ḓoweleaho na u takalela ha tshitshavha u fana u tshitshavha ha mutakalo ha munwe na munwe, u vhona khombo nga u fhambana, na u thikhedzo ho fhelelaho ha vhomakoma kha vhafumakadzi vha KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Muthusi wa Mutakalo u shumisaho AI',
@@ -438,7 +438,7 @@ export const translations = {
     challenges: 'Swiphiqo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Ku tiyisisa vanwana hi vutivi bya rihanyu lebyi fambisiwaka hi AI, vuhlayisi byo sivela, na nseketelo wo helela wa vamakoma — ku sireletsa riendzo ra wena ra rihanyu',
     heroDescription: 'Avuxeni Sesi! Mulanguti wa wena wa rihanyu loyi a nga na vutlhari loyi a nyikaka vuhlayisi bya munhu hi xiyexe, ku vona khombo hi nkarhi, na nseketelo wa vaaki.',
     getStarted: 'Sungula',
@@ -460,7 +460,7 @@ export const translations = {
     // Mission
     ourMission: 'Xikongomelo xa Hina',
     missionTitle: 'Ku Sireletsa Riendzo ra Rihanyu ra Wansati un\'wana na un\'wana',
-    missionDescription: 'HealthyHer Guardian yi hlanganisa thekinoloji ya AI leyi hundzukeke na vuhlayisi bya vaaki ku nyika ku sireletiwa ka rihanyu ka munhu hi xiyexe, ku vona khombo hi nkarhi, na nseketelo wo helela wa vamakoma eka vanwana va KwaZulu-Natal.',
+    missionDescription: 'SheCare yi hlanganisa thekinoloji ya AI leyi hundzukeke na vuhlayisi bya vaaki ku nyika ku sireletiwa ka rihanyu ka munhu hi xiyexe, ku vona khombo hi nkarhi, na nseketelo wo helela wa vamakoma eka vanwana va KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Mupfuni wa Rihanyu loyi a Fambisiwaka hi AI',
@@ -489,7 +489,7 @@ export const translations = {
     challenges: 'Izinselelo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Ukunikeza abesifazane amandla ngolwazi lwezempilo oluqhutshwa yi-AI, ukunakekelwa okuvimbayo, nokusekelwa okubanzi kokuzala — ukuvikela uhambo lwakho lwezempilo',
     heroDescription: 'Sawubona Sisi! Umgcini wakho wezempilo ohlakaniphile onikeza ukunakekelwa komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa komphakathi.',
     getStarted: 'Qala',
@@ -511,7 +511,7 @@ export const translations = {
     // Mission
     ourMission: 'Umsebenzi Wethu',
     missionTitle: 'Ukuvikela Uhambo Lwezempilo Lwawo Wonke Owesifazane',
-    missionDescription: 'I-HealthyHer Guardian ihlanganisa ubuchwepheshe be-AI obuthuthukile nokunakekelwa komphakathi ukunikeza ukuvikelwa kwezempilo komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa okubanzi kokuzala kwabesifazane eKwaZulu-Natal.',
+    missionDescription: 'I-SheCare ihlanganisa ubuchwepheshe be-AI obuthuthukile nokunakekelwa komphakathi ukunikeza ukuvikelwa kwezempilo komuntu siqu, ukubona ubungozi kusenesikhathi, nokusekelwa okubanzi kokuzala kwabesifazane eKwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Umsizi Wezempilo Oqhutshwa yi-AI',
@@ -540,7 +540,7 @@ export const translations = {
     challenges: 'Ditlhohlo',
     
     // Landing Page
-    heroTitle: 'HealthyHer Guardian',
+    heroTitle: 'SheCare',
     heroSubtitle: 'Go maatlafatša basadi ka tsebo ya maphelo ye e sepetšwago ke AI, tlhokomelo ya go thibela, le thekgo ye e feletšego ya bomme — go šireletša leeto la gago la maphelo',
     heroDescription: 'Thobela Kgaitsadi! Molebedi wa gago wa maphelo yo a nago le bohlale yo a fanago ka tlhokomelo ya motho ka noši, go bona kotsi pele ga nako, le thekgo ya setšhaba.',
     getStarted: 'Thoma',
@@ -562,7 +562,7 @@ export const translations = {
     // Mission
     ourMission: 'Maikemišetšo a Rena',
     missionTitle: 'Go Šireletša Leeto la Maphelo la Mosadi yo Mongwe le yo Mongwe',
-    missionDescription: 'HealthyHer Guardian e kopanya theknolotši ye e tšwetšego pele ya AI le tlhokomelo ya setšhaba go fa tšhireletšo ya maphelo ya motho ka noši, go bona kotsi pele ga nako, le thekgo ye e feletšego ya bomme go basadi ba KwaZulu-Natal.',
+    missionDescription: 'SheCare e kopanya theknolotši ye e tšwetšego pele ya AI le tlhokomelo ya setšhaba go fa tšhireletšo ya maphelo ya motho ka noši, go bona kotsi pele ga nako, le thekgo ye e feletšego ya bomme go basadi ba KwaZulu-Natal.',
     
     // Stats
     aiPowered: 'Mothušiši wa Maphelo yo a Sepetšwago ke AI',

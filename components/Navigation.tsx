@@ -3,48 +3,46 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { getTranslation } from '../lib/languages';
+import { useFirebase } from '../hooks/useFirebase';
 
 export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentLanguage } = useLanguage();
   const [showLogout, setShowLogout] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { user, logout } = useFirebase();
 
   // Public routes that don't show navigation
   const publicRoutes = ['/', '/auth'];
 
-  useEffect(() => {
-    // Check authentication status
-    const userAuth = localStorage.getItem('user-auth');
-    setIsAuthenticated(!!userAuth);
-  }, [pathname]);
-
   // Don't show navigation on public routes or if not authenticated
-  if (publicRoutes.includes(pathname) || !isAuthenticated) {
+  if (publicRoutes.includes(pathname) || !user) {
     return null;
   }
 
   const navItems = [
     { href: '/ai-health', icon: 'fas fa-brain', label: getTranslation('aiHealth', currentLanguage) },
     { href: '/community', icon: 'fas fa-map-marked-alt', label: getTranslation('community', currentLanguage) },
-    { href: '/clinics', icon: 'fas fa-clinic-medical', label: 'Clinics' },
     { href: '/risk-alerts', icon: 'fas fa-bell', label: getTranslation('alerts', currentLanguage) },
     { href: '/preventive-care', icon: 'fas fa-gamepad', label: getTranslation('challenges', currentLanguage) },
   ];
 
-  const handleLogout = () => {
-    // Clear any stored user data
-    localStorage.removeItem('user-auth');
-    localStorage.removeItem('user-session');
-    localStorage.removeItem('preventiveCareStats');
-    
-    // Redirect to home page
-    router.push('/');
-    setShowLogout(false);
+  const handleLogout = async () => {
+    try {
+      const result = await logout();
+      if (result.success) {
+        // Redirect to home page
+        router.push('/');
+        setShowLogout(false);
+      } else {
+        console.error('Logout failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -58,7 +56,7 @@ export default function Navigation() {
                 <i className="fas fa-sign-out-alt text-red-600 text-xl"></i>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Sign Out</h3>
-              <p className="text-gray-600 mb-6">Are you sure you want to sign out of HealthyHer Guardian?</p>
+              <p className="text-gray-600 mb-6">Are you sure you want to sign out of SheCare?</p>
               
               <div className="flex gap-3">
                 <button

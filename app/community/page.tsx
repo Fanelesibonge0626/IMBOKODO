@@ -2,11 +2,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface HealthcareProvider {
   id: number;
   name: string;
-  type: 'clinic' | 'hospital' | 'midwife' | 'specialist';
+  type: 'clinic' | 'hospital';
   address: string;
   distance: string;
   phone: string;
@@ -17,7 +18,6 @@ interface HealthcareProvider {
   reviews: number;
   availability: string;
   coordinates: { lat: number; lng: number };
-  specializations?: string[];
   emergencyServices: boolean;
 }
 
@@ -30,9 +30,7 @@ export default function CommunityPage() {
   const providerTypes = [
     { id: 'all', label: 'All Providers', icon: 'fas fa-hospital' },
     { id: 'clinic', label: 'Clinics', icon: 'fas fa-clinic-medical' },
-    { id: 'hospital', label: 'Hospitals', icon: 'fas fa-hospital' },
-    { id: 'midwife', label: 'Midwives', icon: 'fas fa-baby' },
-    { id: 'specialist', label: 'Specialists', icon: 'fas fa-user-md' }
+    { id: 'hospital', label: 'Hospitals', icon: 'fas fa-hospital' }
   ];
 
   useEffect(() => {
@@ -71,23 +69,6 @@ export default function CommunityPage() {
       },
       {
         id: 3,
-        name: 'Sister Nomsa Mthembu - Certified Midwife',
-        type: 'midwife',
-        address: 'Umlazi Section BB, Home Visits Available',
-        distance: '8.5 km',
-        phone: '083-456-7890',
-        email: 'nomsa.midwife@gmail.com',
-        services: ['Home Births', 'Prenatal Care', 'Postnatal Care', 'Breastfeeding Support'],
-        languages: ['Zulu', 'English'],
-        rating: 4.9,
-        reviews: 78,
-        availability: 'Available 24/7 for births, Consultations by appointment',
-        coordinates: { lat: -29.9689, lng: 30.8794 },
-        specializations: ['Natural Birth', 'High-Risk Pregnancies'],
-        emergencyServices: false
-      },
-      {
-        id: 4,
         name: 'Chatsworth Maternity Clinic',
         type: 'clinic',
         address: '45 Chatsworth Centre, Unit Road',
@@ -102,24 +83,7 @@ export default function CommunityPage() {
         emergencyServices: false
       },
       {
-        id: 5,
-        name: 'Dr. Priya Sharma - Gynecologist',
-        type: 'specialist',
-        address: 'Sandton Medical Centre, Musgrave Road',
-        distance: '5.7 km',
-        phone: '031-201-3456',
-        email: 'dr.sharma@gynhealth.co.za',
-        services: ['Gynecological Exams', 'Fertility Consultations', 'Prenatal Care', 'Surgery'],
-        languages: ['English', 'Hindi', 'Gujarati'],
-        rating: 4.7,
-        reviews: 203,
-        availability: 'Mon-Thu: 9:00-17:00, Fri: 9:00-15:00',
-        coordinates: { lat: -29.8465, lng: 31.0244 },
-        specializations: ['Fertility Treatment', 'High-Risk Pregnancies', 'Endometriosis'],
-        emergencyServices: false
-      },
-      {
-        id: 6,
+        id: 4,
         name: 'Pinetown Community Health Centre',
         type: 'clinic',
         address: '78 Main Road, Pinetown',
@@ -146,8 +110,6 @@ export default function CommunityPage() {
     switch (type) {
       case 'clinic': return 'fas fa-clinic-medical';
       case 'hospital': return 'fas fa-hospital';
-      case 'midwife': return 'fas fa-baby';
-      case 'specialist': return 'fas fa-user-md';
       default: return 'fas fa-hospital';
     }
   };
@@ -156,8 +118,6 @@ export default function CommunityPage() {
     switch (type) {
       case 'clinic': return 'from-blue-500 to-blue-600';
       case 'hospital': return 'from-red-500 to-red-600';
-      case 'midwife': return 'from-pink-500 to-pink-600';
-      case 'specialist': return 'from-purple-500 to-purple-600';
       default: return 'from-gray-500 to-gray-600';
     }
   };
@@ -185,7 +145,7 @@ export default function CommunityPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold">Community Healthcare Network</h1>
-                <p className="text-white/80">Connect with local clinics, midwives, and specialists</p>
+                <p className="text-white/80">Connect with local clinics and hospitals</p>
               </div>
             </div>
             <div className="text-right">
@@ -313,23 +273,6 @@ export default function CommunityPage() {
                   </div>
                 </div>
 
-                {/* Specializations */}
-                {provider.specializations && (
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Specializations:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {provider.specializations.map((spec, index) => (
-                        <span
-                          key={index}
-                          className="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full"
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Languages */}
                 <div className="mb-4">
                   <h4 className="font-semibold text-gray-900 mb-2">Languages:</h4>
@@ -355,6 +298,16 @@ export default function CommunityPage() {
                     Contact Clinic
                   </a>
                   
+                  {provider.type === 'clinic' && (
+                    <Link
+                      href={`/booking?provider=${encodeURIComponent(provider.name)}&type=${provider.type}&phone=${provider.phone}`}
+                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all"
+                    >
+                      <i className="fas fa-calendar-plus mr-2"></i>
+                      Book Appointment
+                    </Link>
+                  )}
+                  
                   {provider.email && (
                     <a
                       href={`mailto:${provider.email}`}
@@ -369,7 +322,7 @@ export default function CommunityPage() {
                     href={`https://maps.google.com/maps?q=${provider.coordinates.lat},${provider.coordinates.lng}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all"
+                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-colors"
                   >
                     <i className="fas fa-directions mr-2"></i>
                     Get Directions
