@@ -127,6 +127,17 @@ export default function DashboardPage() {
               Voice Commands
             </button>
           </div>
+
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
+            <h3 className="text-xl font-semibold text-white mb-3">My Bookings</h3>
+            <p className="text-white/80 mb-4">View and manage your clinic appointments</p>
+            <button 
+              onClick={() => router.push('/my-bookings')}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors"
+            >
+              View Bookings
+            </button>
+          </div>
         </div>
       </div>
     </div>

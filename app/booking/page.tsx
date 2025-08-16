@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useFirebase } from '../../hooks/useFirebase';
 import Link from 'next/link';
 
 interface BookingForm {
@@ -20,6 +21,7 @@ interface BookingForm {
 
 export default function BookingPage() {
   const searchParams = useSearchParams();
+  const { user, loading } = useFirebase();
   const [formData, setFormData] = useState<BookingForm>({
     providerName: '',
     providerType: '',
@@ -51,6 +53,16 @@ export default function BookingPage() {
       }));
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    // Auto-populate patient email if user is logged in
+    if (user?.email && typeof user.email === 'string') {
+      setFormData(prev => ({
+        ...prev,
+        patientEmail: user.email
+      }));
+    }
+  }, [user]);
 
   const serviceTypes = [
     'Prenatal Care',
@@ -103,8 +115,13 @@ export default function BookingPage() {
         status: 'pending',
         createdAt: new Date().toISOString()
       };
+      console.log('Saving new booking:', newBooking);
+      console.log('Current user email:', user?.email);
+      console.log('Form data patientEmail:', formData.patientEmail);
+      
       bookings.push(newBooking);
       localStorage.setItem('shecare-bookings', JSON.stringify(bookings));
+      console.log('Updated bookings in localStorage:', bookings);
       
       setIsSuccess(true);
     } catch (error) {
@@ -120,6 +137,39 @@ export default function BookingPage() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     return tomorrow.toISOString().split('T')[0];
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="bg-red-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <i className="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Authentication Required</h1>
+          <p className="text-gray-600 mb-6">
+            You need to be logged in to book appointments. Please sign in to continue.
+          </p>
+          <Link
+            href="/auth"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all"
+          >
+            Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (
@@ -171,7 +221,7 @@ export default function BookingPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Link
-                href="/community"
+                href="/clinics"
                 className="bg-white/20 backdrop-blur-sm rounded-full p-2 mr-4 hover:bg-white/30 transition-colors"
               >
                 <i className="fas fa-arrow-left text-white"></i>
@@ -242,7 +292,7 @@ export default function BookingPage() {
                   </div>
                   <div className="md:col-span-2">
                     <label htmlFor="patientEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address
+                      Email Address *
                     </label>
                     <input
                       type="email"
@@ -250,6 +300,7 @@ export default function BookingPage() {
                       name="patientEmail"
                       value={formData.patientEmail}
                       onChange={handleInputChange}
+                      required
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       placeholder="Enter your email address"
                     />

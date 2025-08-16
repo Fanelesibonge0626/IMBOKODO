@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 export default function FirebaseAuth() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [userRole, setUserRole] = useState<'admin'>('admin');
+  const [userRole, setUserRole] = useState<'user' | 'admin'>('user');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -41,50 +41,67 @@ export default function FirebaseAuth() {
           setError(result.error || 'Signup failed. Please try again.');
         }
       } else {
-        console.log('Attempting admin signin...');
+        console.log('Attempting signin...');
         
-        // Check if this is an admin login (automatic detection)
-        const ADMIN_CREDENTIALS = {
-          email: 'admin@durbanwomensclinic.co.za',
-          password: 'admin123'
-        };
-        
-        console.log('Checking admin credentials...');
-        console.log('Input email:', email);
-        console.log('Input password:', password);
-        
-        // Check if admin credentials are used
-        if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-          console.log('Admin login detected, setting admin session...');
+        if (userRole === 'admin') {
+          // Admin authentication
+          const ADMIN_CREDENTIALS = {
+            email: 'admin@durbanwomensclinic.co.za',
+            password: 'admin123'
+          };
           
-          try {
-            // Set admin session
-            const adminSession = {
-              isAdmin: true,
-              email: email,
-              clinic: 'Durban Women\'s Health Clinic',
-              loginTime: new Date().toISOString()
-            };
+          console.log('Checking admin credentials...');
+          console.log('Input email:', email);
+          console.log('Input password:', password);
+          
+          // Check if admin credentials are used
+          if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+            console.log('Admin login detected, setting admin session...');
             
-            localStorage.setItem('shecare-admin-session', JSON.stringify(adminSession));
-            console.log('Admin session set successfully:', adminSession);
-            
-            // Clear any existing errors
-            setError('');
-            
-            // Redirect immediately without delay
-            console.log('Redirecting to admin panel...');
-            window.location.href = '/admin/durban-womens-clinic';
-            
-            return;
-          } catch (error) {
-            console.error('Error setting admin session:', error);
-            setError('Failed to set admin session. Please try again.');
+            try {
+              // Set admin session
+              const adminSession = {
+                isAdmin: true,
+                email: email,
+                clinic: 'Durban Women\'s Health Clinic',
+                loginTime: new Date().toISOString()
+              };
+              
+              localStorage.setItem('shecare-admin-session', JSON.stringify(adminSession));
+              console.log('Admin session set successfully:', adminSession);
+              
+              // Clear any existing errors
+              setError('');
+              
+              // Redirect immediately without delay
+              console.log('Redirecting to admin panel...');
+              window.location.href = '/admin/durban-womens-clinic';
+              
+              return;
+            } catch (error) {
+              console.error('Error setting admin session:', error);
+              setError('Failed to set admin session. Please try again.');
+              return;
+            }
+          } else {
+            console.log('Invalid admin credentials');
+            setError('Invalid admin credentials. Please check your email and password.');
             return;
           }
         } else {
-          console.log('Invalid admin credentials');
-          setError('Invalid admin credentials. Please check your email and password.');
+          // Regular user authentication
+          console.log('Regular user credentials, proceeding with Firebase authentication...');
+          
+          const result = await signIn(email, password);
+          console.log('Signin result:', result);
+          
+          if (result.success) {
+            console.log('Signin successful, redirecting...');
+            router.push('/dashboard');
+          } else {
+            console.error('Signin failed:', result.error);
+            setError(result.error || 'Signin failed. Please try again.');
+          }
         }
       }
     } catch (err: any) {
@@ -99,7 +116,7 @@ export default function FirebaseAuth() {
   // Reset form when switching between signup/signin
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
-    setUserRole('admin'); // Reset to admin role
+    setUserRole('user'); // Reset to user role
     setError('');
     setEmail('');
     setPassword('');
@@ -111,21 +128,23 @@ export default function FirebaseAuth() {
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {isSignUp ? 'Create Admin Account' : 'Admin Access'}
+            {isSignUp ? 'Create Account' : userRole === 'admin' ? 'Admin Access' : 'Welcome Back'}
           </h1>
           <p className="text-gray-600">
             {isSignUp 
-              ? 'Create administrative access for clinic staff' 
-              : 'Access Durban Women\'s Clinic Administrative Dashboard'
+              ? 'Join our clinics network today' 
+              : userRole === 'admin' 
+                ? 'Access Durban Women\'s Clinic Administrative Dashboard'
+                : 'Sign in to your account'
             }
           </p>
           
           {/* Role Indicator */}
           {!isSignUp && (
             <div className="mt-4 inline-flex items-center bg-purple-100 text-purple-700 rounded-full px-4 py-2">
-              <i className="fas fa-hospital mr-2"></i>
+              <i className={`${userRole === 'admin' ? 'fas fa-hospital' : 'fas fa-user'} mr-2`}></i>
               <span className="text-sm font-medium">
-                Clinic Administrator
+                {userRole === 'admin' ? 'Clinic Administrator' : 'Regular User'}
               </span>
             </div>
           )}
@@ -135,15 +154,32 @@ export default function FirebaseAuth() {
         {!isSignUp && (
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
-              Access Type
+              Select Your Role
             </label>
             <div className="flex rounded-lg border border-gray-300 p-1 bg-gray-50">
               <button
                 type="button"
-                className="flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white text-purple-600 shadow-sm border border-gray-200"
+                onClick={() => setUserRole('user')}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                  userRole === 'user'
+                    ? 'bg-white text-purple-600 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                <i className="fas fa-user mr-2"></i>
+                Regular User
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserRole('admin')}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
+                  userRole === 'admin'
+                    ? 'bg-white text-purple-600 shadow-sm border border-gray-200'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
               >
                 <i className="fas fa-hospital mr-2"></i>
-                Clinic Administrator
+                Clinic Admin
               </button>
             </div>
           </div>
@@ -170,7 +206,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Admin Email
+              {userRole === 'admin' ? 'Admin Email' : 'Email Address'}
             </label>
             <input
               type="email"
@@ -178,7 +214,7 @@ export default function FirebaseAuth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter admin email"
+              placeholder={userRole === 'admin' ? 'Enter admin email' : 'Enter your email'}
               required
               disabled={loading}
             />
@@ -186,7 +222,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Admin Password
+              {userRole === 'admin' ? 'Admin Password' : 'Password'}
             </label>
             <input
               type="password"
@@ -194,7 +230,7 @@ export default function FirebaseAuth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter admin password"
+              placeholder={userRole === 'admin' ? 'Enter admin password' : 'Enter your password'}
               required
               disabled={loading}
             />
@@ -217,7 +253,7 @@ export default function FirebaseAuth() {
                 Processing...
               </div>
             ) : (
-              isSignUp ? 'Create Admin Account' : 'Access Admin Panel'
+              isSignUp ? 'Create Account' : userRole === 'admin' ? 'Access Admin Panel' : 'Sign In'
             )}
           </button>
         </form>
@@ -229,7 +265,7 @@ export default function FirebaseAuth() {
             className="text-purple-600 hover:text-purple-700 font-medium"
             disabled={loading}
           >
-            {isSignUp ? 'Already have an admin account? Sign In' : "Need to create an admin account? Sign Up"}
+            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
           </button>
         </div>
       </div>

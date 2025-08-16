@@ -26,6 +26,7 @@ export default function Navigation() {
   const navItems = [
     { href: '/ai-health', icon: 'fas fa-brain', label: getTranslation('aiHealth', currentLanguage) },
     { href: '/clinics', icon: 'fas fa-map-marked-alt', label: 'Clinics' },
+    { href: '/my-bookings', icon: 'fas fa-calendar-check', label: 'Bookings' },
     { href: '/risk-alerts', icon: 'fas fa-bell', label: getTranslation('alerts', currentLanguage) },
     { href: '/preventive-care', icon: 'fas fa-gamepad', label: getTranslation('challenges', currentLanguage) },
   ];
@@ -78,7 +79,7 @@ export default function Navigation() {
       )}
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-40">
-        <div className="grid grid-cols-6 h-20">
+        <div className="grid grid-cols-7 h-20">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
