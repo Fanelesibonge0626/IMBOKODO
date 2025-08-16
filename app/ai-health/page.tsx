@@ -287,15 +287,7 @@ export default function AIHealthPage() {
         </div>
       </div>
 
-      {/* Emergency Banner */}
-      <div className="bg-red-500 text-white p-2">
-        <div className="container mx-auto text-center">
-          <p className="text-sm">
-            <i className="fas fa-exclamation-triangle mr-2"></i>
-            For medical emergencies, call <a href="tel:10111" className="font-semibold underline">10111</a> or visit your nearest hospital
-          </p>
-        </div>
-      </div>
+      {/* Emergency Banner - Removed */}
     </div>
   );
 }

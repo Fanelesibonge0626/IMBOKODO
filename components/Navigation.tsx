@@ -25,7 +25,7 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/ai-health', icon: 'fas fa-brain', label: getTranslation('aiHealth', currentLanguage) },
-    { href: '/clinics', icon: 'fas fa-map-marked-alt', label: 'Clinics' },
+    { href: '/clinics', icon: 'fas fa-map-marked-alt', label: 'HealthCare' },
     { href: '/my-bookings', icon: 'fas fa-calendar-check', label: 'Bookings' },
     { href: '/risk-alerts', icon: 'fas fa-bell', label: getTranslation('alerts', currentLanguage) },
     { href: '/preventive-care', icon: 'fas fa-gamepad', label: getTranslation('challenges', currentLanguage) },

@@ -297,14 +297,15 @@ export default function SubscriptionPage() {
                 </div>
               )}
               
-              {paymentSystemStatus === 'error' && (
+              {/* Payment system error message hidden */}
+              {/* {paymentSystemStatus === 'error' && (
                 <div className="bg-yellow-100 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg">
                   <div className="flex items-center justify-center">
                     <i className="fas fa-exclamation-triangle mr-2"></i>
                     <span>Payment system temporarily unavailable. You can still test the subscription.</span>
                   </div>
                 </div>
-              )}
+              )} */}
               
               {paymentSystemStatus === 'ready' && (
                 <div className="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
@@ -340,8 +341,8 @@ export default function SubscriptionPage() {
                 )}
               </button>
 
-              {/* Development/Testing Button */}
-              <button
+              {/* Development/Testing Button - Hidden */}
+              {/* <button
                 onClick={handleMockSubscription}
                 disabled={isProcessing || paymentSystemStatus === 'loading'}
                 className="w-full bg-gray-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -354,7 +355,7 @@ export default function SubscriptionPage() {
                 ) : (
                   '🧪 Test Subscription (Development)'
                 )}
-              </button>
+              </button> */}
 
               {/* Cancel Button - Only show when processing */}
               {isProcessing && (
