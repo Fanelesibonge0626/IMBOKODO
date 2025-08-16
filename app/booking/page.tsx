@@ -56,10 +56,10 @@ export default function BookingPage() {
 
   useEffect(() => {
     // Auto-populate patient email if user is logged in
-    if (user?.email && typeof user.email === 'string') {
+    if (user?.email) {
       setFormData(prev => ({
         ...prev,
-        patientEmail: user.email
+        patientEmail: user.email!
       }));
     }
   }, [user]);
