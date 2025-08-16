@@ -110,31 +110,6 @@ export default function Home() {
               View Clinics
             </Link>
           </div>
-
-          {/* Admin Access Section */}
-          <div className="mt-12 text-center">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 max-w-md mx-auto">
-              <div className="flex items-center justify-center mb-4">
-                <div className="bg-white/20 backdrop-blur-sm rounded-full p-3 mr-3">
-                  <i className="fas fa-hospital text-white text-2xl"></i>
-                </div>
-                <div className="text-left">
-                  <h3 className="text-xl font-semibold text-white">Clinic Administration</h3>
-                  <p className="text-white/80 text-sm">Staff Access Only</p>
-                </div>
-              </div>
-              <p className="text-white/90 mb-6 text-sm">
-                Manage Durban Women's Health Clinic bookings, appointments, and patient records
-              </p>
-              <Link
-                href="/admin/login"
-                className="inline-flex items-center bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
-              >
-                <i className="fas fa-shield-alt mr-2"></i>
-                Access Admin Panel
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
 

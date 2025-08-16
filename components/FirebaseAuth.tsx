@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 export default function FirebaseAuth() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [userRole, setUserRole] = useState<'user' | 'admin'>('user');
+  const [userRole, setUserRole] = useState<'admin'>('admin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -41,7 +41,7 @@ export default function FirebaseAuth() {
           setError(result.error || 'Signup failed. Please try again.');
         }
       } else {
-        console.log('Attempting signin...');
+        console.log('Attempting admin signin...');
         
         // Check if this is an admin login (automatic detection)
         const ADMIN_CREDENTIALS = {
@@ -49,7 +49,7 @@ export default function FirebaseAuth() {
           password: 'admin123'
         };
         
-        console.log('Checking credentials...');
+        console.log('Checking admin credentials...');
         console.log('Input email:', email);
         console.log('Input password:', password);
         
@@ -83,19 +83,8 @@ export default function FirebaseAuth() {
             return;
           }
         } else {
-          console.log('Regular user credentials, proceeding with Firebase authentication...');
-          
-          // Regular user authentication
-          const result = await signIn(email, password);
-          console.log('Signin result:', result);
-          
-          if (result.success) {
-            console.log('Signin successful, redirecting...');
-            router.push('/dashboard');
-          } else {
-            console.error('Signin failed:', result.error);
-            setError(result.error || 'Signin failed. Please try again.');
-          }
+          console.log('Invalid admin credentials');
+          setError('Invalid admin credentials. Please check your email and password.');
         }
       }
     } catch (err: any) {
@@ -110,7 +99,7 @@ export default function FirebaseAuth() {
   // Reset form when switching between signup/signin
   const toggleMode = () => {
     setIsSignUp(!isSignUp);
-    setUserRole('user'); // Reset to user role
+    setUserRole('admin'); // Reset to admin role
     setError('');
     setEmail('');
     setPassword('');
@@ -122,58 +111,39 @@ export default function FirebaseAuth() {
       <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {isSignUp ? 'Create Account' : userRole === 'admin' ? 'Admin Access' : 'Welcome Back'}
+            {isSignUp ? 'Create Admin Account' : 'Admin Access'}
           </h1>
           <p className="text-gray-600">
             {isSignUp 
-              ? 'Join our clinics network today' 
-              : userRole === 'admin' 
-                ? 'Access Durban Women\'s Clinic Administrative Dashboard'
-                : 'Sign in to your account'
+              ? 'Create administrative access for clinic staff' 
+              : 'Access Durban Women\'s Clinic Administrative Dashboard'
             }
           </p>
           
           {/* Role Indicator */}
           {!isSignUp && (
             <div className="mt-4 inline-flex items-center bg-purple-100 text-purple-700 rounded-full px-4 py-2">
-              <i className={`${userRole === 'admin' ? 'fas fa-hospital' : 'fas fa-user'} mr-2`}></i>
+              <i className="fas fa-hospital mr-2"></i>
               <span className="text-sm font-medium">
-                {userRole === 'admin' ? 'Clinic Administrator' : 'Regular User'}
+                Clinic Administrator
               </span>
             </div>
           )}
         </div>
 
         {/* Role Selection */}
-        {!isSignUp && false && (
+        {!isSignUp && (
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
-              Select Your Role
+              Access Type
             </label>
             <div className="flex rounded-lg border border-gray-300 p-1 bg-gray-50">
               <button
                 type="button"
-                onClick={() => setUserRole('user')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                  userRole === 'user'
-                    ? 'bg-white text-purple-600 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
-              >
-                <i className="fas fa-user mr-2"></i>
-                Regular User
-              </button>
-              <button
-                type="button"
-                onClick={() => setUserRole('admin')}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all ${
-                  userRole === 'admin'
-                    ? 'bg-white text-purple-600 shadow-sm border border-gray-200'
-                    : 'text-gray-600 hover:text-gray-800'
-                }`}
+                className="flex-1 py-2 px-4 rounded-md text-sm font-medium bg-white text-purple-600 shadow-sm border border-gray-200"
               >
                 <i className="fas fa-hospital mr-2"></i>
-                Clinic Admin
+                Clinic Administrator
               </button>
             </div>
           </div>
@@ -200,7 +170,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              Admin Email
             </label>
             <input
               type="email"
@@ -208,7 +178,7 @@ export default function FirebaseAuth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter your email"
+              placeholder="Enter admin email"
               required
               disabled={loading}
             />
@@ -216,7 +186,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+              Admin Password
             </label>
             <input
               type="password"
@@ -224,7 +194,7 @@ export default function FirebaseAuth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter your password"
+              placeholder="Enter admin password"
               required
               disabled={loading}
             />
@@ -247,7 +217,7 @@ export default function FirebaseAuth() {
                 Processing...
               </div>
             ) : (
-              isSignUp ? 'Create Account' : 'Sign In'
+              isSignUp ? 'Create Admin Account' : 'Access Admin Panel'
             )}
           </button>
         </form>
@@ -259,7 +229,7 @@ export default function FirebaseAuth() {
             className="text-purple-600 hover:text-purple-700 font-medium"
             disabled={loading}
           >
-            {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+            {isSignUp ? 'Already have an admin account? Sign In' : "Need to create an admin account? Sign Up"}
           </button>
         </div>
       </div>
