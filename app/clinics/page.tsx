@@ -105,242 +105,179 @@ export default function ClinicsPage() {
     return provider.type === selectedType;
   });
 
-  const generateQRCode = () => {
-    const mapUrl = `https://maps.google.com/maps?q=${providers.map(p => `${p.coordinates.lat},${p.coordinates.lng}`).join('|')}`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(mapUrl)}`;
-    
-    const newWindow = window.open();
-    if (newWindow) {
-      newWindow.document.write(`
-        <html>
-          <head><title>Offline Clinic Map - QR Code</title></head>
-          <body style="font-family: Arial; text-align: center; padding: 20px;">
-            <h2>Scan to Save Clinic Locations Offline</h2>
-            <img src="${qrUrl}" alt="QR Code for clinic locations" style="margin: 20px;"/>
-            <p>Scan this QR code with your phone to save clinic locations for offline use.</p>
-          </body>
-        </html>
-      `);
-    }
-  };
-
   return (
-    <div className="min-vh-100 bg-light">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div 
-        className="text-white py-4"
-        style={{ background: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)' }}
-      >
-        <div className="container">
-          <div className="d-flex align-items-center justify-content-between">
-            <div>
-              <h1 className="h3 fw-bold mb-1">Find Healthcare Clinics</h1>
-              <p className="mb-0 opacity-90">Thola amakliniki asendawini yakho</p>
-            </div>
-            <button 
-              onClick={generateQRCode}
-              className="btn btn-light btn-sm rounded-pill text-decoration-none whitespace-nowrap"
-              style={{ color: 'var(--primary-purple)' }}
-            >
-              <div className="w-4 h-4 d-flex align-items-center justify-content-center me-1">
-                <i className="ri-qr-code-line"></i>
-              </div>
-              QR Code
-            </button>
+      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4">Find Healthcare Clinics</h1>
+            <p className="text-xl text-white/90">Thola amakliniki asendawini yakho</p>
           </div>
         </div>
       </div>
 
-      {/* SMS Guide */}
-      <div className="bg-warning bg-opacity-10 py-3">
-        <div className="container">
-          <div className="card border-0 bg-white rounded-3">
-            <div className="card-body p-3">
-              <div className="d-flex align-items-center">
-                <div className="w-10 h-10 d-flex align-items-center justify-content-center me-3">
-                  <i className="ri-message-2-line fs-4" style={{ color: 'var(--primary-purple)' }}></i>
-                </div>
-                <div className="flex-grow-1">
-                  <h6 className="fw-semibold mb-1">No Data? No Problem!</h6>
-                  <p className="small mb-0 text-muted">
-                    Text <strong>CLINIC [Your Town]</strong> to <strong>+27 123 456 789</strong>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filter Tabs */}
-      <div className="container py-3">
-        <div className="row g-2">
-          {providerTypes.map((type) => (
-            <div key={type.id} className="col-6 col-lg-3">
+      <div className="container mx-auto px-4 py-8">
+        {/* Filter Tabs */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-3 justify-center">
+            {providerTypes.map((type) => (
               <button
+                key={type.id}
                 onClick={() => setSelectedType(type.id)}
-                className={`btn w-100 rounded-pill d-flex align-items-center justify-content-center py-2 text-decoration-none whitespace-nowrap ${
+                className={`flex items-center px-6 py-3 rounded-full font-medium transition-all ${
                   selectedType === type.id
-                    ? 'text-white'
-                    : 'btn-outline-secondary'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
                 }`}
-                style={{
-                  background: selectedType === type.id 
-                    ? 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)' 
-                    : 'transparent',
-                  border: selectedType === type.id ? 'none' : '1px solid #dee2e6'
-                }}
               >
-                <div className="w-4 h-4 d-flex align-items-center justify-content-center me-2">
-                  <i className={type.icon}></i>
-                </div>
-                <span className="small">{type.label}</span>
+                <i className={`${type.icon} mr-2`}></i>
+                {type.label}
               </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Toggle Map/List View */}
-      <div className="container mb-3">
-        <div className="d-flex justify-content-center">
-          <div className="btn-group rounded-pill" role="group">
+        {/* View Mode Toggle */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-white rounded-full p-1 border border-gray-200">
             <button
               onClick={() => setViewMode('list')}
-              className={`btn ${viewMode === 'list' ? 'btn-primary' : 'btn-outline-primary'} rounded-start-pill text-decoration-none whitespace-nowrap`}
+              className={`px-6 py-2 rounded-full font-medium transition-all ${
+                viewMode === 'list'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
             >
-              <div className="w-4 h-4 d-flex align-items-center justify-content-center me-1">
-                <i className="ri-list-check"></i>
-              </div>
+              <i className="fas fa-list mr-2"></i>
               List View
             </button>
             <button
               onClick={() => setViewMode('map')}
-              className={`btn ${viewMode === 'map' ? 'btn-primary' : 'btn-outline-primary'} rounded-end-pill text-decoration-none whitespace-nowrap`}
+              className={`px-6 py-2 rounded-full font-medium transition-all ${
+                viewMode === 'map'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
             >
-              <div className="w-4 h-4 d-flex align-items-center justify-content-center me-1">
-                <i className="ri-map-2-line"></i>
-              </div>
+              <i className="fas fa-map mr-2"></i>
               Map View
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Map View */}
-      {viewMode === 'map' && (
-        <div className="container mb-4">
-          <div className="card border-0 rounded-4 overflow-hidden">
-            <div style={{ height: '400px', position: 'relative' }}>
-              <iframe
-                src={`https://maps.google.com/maps?q=${providers.map(p => `${p.coordinates.lat},${p.coordinates.lng}`).join('|')}&output=embed&z=12`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Providers List */}
-      <div className="container pb-4">
-        <div className="d-flex align-items-center justify-content-between mb-3">
-          <h5 className="fw-semibold mb-0">
-            {filteredProviders.length} clinic{filteredProviders.length !== 1 ? 's' : ''} found
-          </h5>
-          <small className="text-muted">Sorted by distance</small>
-        </div>
-
-        <div className="row g-3">
-          {filteredProviders.map((provider) => (
-            <div key={provider.id} className="col-12">
-              <div className="card border-0 rounded-4 card-hover">
-                <div className="card-body p-4">
-                  <div className="d-flex justify-content-between align-items-start mb-3">
-                    <div className="flex-grow-1">
-                      <h6 className="fw-bold mb-1">{provider.name}</h6>
-                      <p className="small text-muted mb-1">
-                        <i className="ri-map-pin-line me-1"></i>
-                        {provider.address}
-                      </p>
-                      <p className="small text-muted mb-0">
-                        <i className="ri-time-line me-1"></i>
-                        {provider.availability}
-                      </p>
-                    </div>
-                    <span className="badge rounded-pill" style={{ backgroundColor: 'var(--primary-purple)', color: 'white' }}>
-                      {provider.distance}
-                    </span>
-                  </div>
-
-                  <div className="mb-3">
-                    <h6 className="small fw-semibold mb-2">Services Available:</h6>
-                    <div className="d-flex flex-wrap gap-1">
-                      {provider.services.map((service, index) => (
-                        <span 
-                          key={index}
-                          className="badge bg-light text-dark rounded-pill small"
-                        >
-                          {service}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
-                    <h6 className="small fw-semibold mb-2">Languages Spoken:</h6>
-                    <div className="d-flex flex-wrap gap-1">
-                      {provider.languages.map((language, index) => (
-                        <span 
-                          key={index}
-                          className="badge rounded-pill"
-                          style={{ backgroundColor: 'var(--light-pink)', color: 'var(--primary-purple)' }}
-                        >
-                          {language}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="d-flex gap-2">
-                    <a 
-                      href={`tel:${provider.phone}`}
-                      className="btn btn-outline-primary btn-sm rounded-pill flex-grow-1 text-decoration-none whitespace-nowrap"
-                    >
-                      <div className="w-4 h-4 d-flex align-items-center justify-content-center me-1">
-                        <i className="ri-phone-line"></i>
-                      </div>
-                      Call Now
-                    </a>
-                    <a 
-                      href={`https://maps.google.com/maps?q=${provider.coordinates.lat},${provider.coordinates.lng}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-outline-secondary btn-sm rounded-pill flex-grow-1 text-decoration-none whitespace-nowrap"
-                    >
-                      <i className="ri-map-pin-line me-1"></i>
-                      Directions
-                    </a>
-                    
-                    {/* Booking Button for Clinics */}
-                    {provider.type === 'clinic' && (
-                      <Link
-                        href={`/booking?provider=${encodeURIComponent(provider.name)}&type=${provider.type}&phone=${provider.phone}`}
-                        className="btn btn-primary btn-sm rounded-pill flex-grow-1 text-decoration-none whitespace-nowrap"
-                      >
-                        <i className="fas fa-calendar-plus me-1"></i>
-                        Book Appointment
-                      </Link>
-                    )}
-                  </div>
-                </div>
+        {/* Map View */}
+        {viewMode === 'map' && (
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="h-96 relative">
+                <iframe
+                  src={`https://maps.google.com/maps?q=${providers.map(p => `${p.coordinates.lat},${p.coordinates.lng}`).join('|')}&output=embed&z=12`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Providers List */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {filteredProviders.length} clinic{filteredProviders.length !== 1 ? 's' : ''} found
+            </h2>
+            <p className="text-gray-600">Sorted by distance</p>
+          </div>
+
+          <div className="grid gap-6">
+            {filteredProviders.map((provider) => (
+              <div key={provider.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{provider.name}</h3>
+                    <p className="text-gray-600 mb-1">
+                      <i className="fas fa-map-marker-alt mr-2 text-purple-500"></i>
+                      {provider.address}
+                    </p>
+                    <p className="text-gray-600 mb-1">
+                      <i className="fas fa-clock mr-2 text-purple-500"></i>
+                      {provider.availability}
+                    </p>
+                    <p className="text-gray-600">
+                      <i className="fas fa-star mr-2 text-yellow-500"></i>
+                      {provider.rating} ({provider.reviews} reviews)
+                    </p>
+                  </div>
+                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    {provider.distance}
+                  </span>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Services Available:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {provider.services.map((service, index) => (
+                      <span 
+                        key={index}
+                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {service}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold text-gray-900 mb-2">Languages Spoken:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {provider.languages.map((language, index) => (
+                      <span 
+                        key={index}
+                        className="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm"
+                      >
+                        {language}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <a 
+                    href={`tel:${provider.phone}`}
+                    className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl font-medium text-center hover:bg-blue-700 transition-colors"
+                  >
+                    <i className="fas fa-phone mr-2"></i>
+                    Call Now
+                  </a>
+                  <a 
+                    href={`https://maps.google.com/maps?q=${provider.coordinates.lat},${provider.coordinates.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 bg-gray-600 text-white px-4 py-3 rounded-xl font-medium text-center hover:bg-gray-700 transition-colors"
+                  >
+                    <i className="fas fa-map-marker-alt mr-2"></i>
+                    Directions
+                  </a>
+                  
+                  {/* Booking Button for Clinics */}
+                  {provider.type === 'clinic' && (
+                    <Link
+                      href={`/booking?provider=${encodeURIComponent(provider.name)}&type=${provider.type}&phone=${provider.phone}`}
+                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl font-medium text-center hover:from-purple-700 hover:to-pink-700 transition-all"
+                    >
+                      <i className="fas fa-calendar-plus mr-2"></i>
+                      Book Appointment
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

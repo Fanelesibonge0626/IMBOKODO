@@ -126,7 +126,7 @@ export default function FirebaseAuth() {
           </h1>
           <p className="text-gray-600">
             {isSignUp 
-              ? 'Join our community today' 
+              ? 'Join our clinics network today' 
               : userRole === 'admin' 
                 ? 'Access Durban Women\'s Clinic Administrative Dashboard'
                 : 'Sign in to your account'

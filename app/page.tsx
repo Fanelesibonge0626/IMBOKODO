@@ -78,9 +78,9 @@ export default function Home() {
             <span className="text-white/90 font-medium">📅 Cycle Tracker</span>
           </div>
 
-          {/* Community */}
+          {/* Clinics */}
           <div className="absolute top-60 right-60 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float">
-            <span className="text-white/90 font-medium">👥 Community</span>
+            <span className="text-white/90 font-medium">🏥 Clinics</span>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ export default function Home() {
               Your Complete SheCare
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Advanced AI-powered healthcare support designed to protect and empower women in our community
+              Advanced AI-powered healthcare support designed to protect and empower women with access to local clinics
             </p>
           </div>
 

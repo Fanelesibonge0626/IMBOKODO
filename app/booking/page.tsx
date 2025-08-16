@@ -146,10 +146,10 @@ export default function BookingPage() {
           </div>
           <div className="mt-8 space-y-3">
             <Link
-              href="/community"
+              href="/clinics"
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all"
             >
-              Back to Community
+              Back to Clinics
             </Link>
             <Link
               href="/dashboard"
@@ -378,6 +378,15 @@ export default function BookingPage() {
             </form>
           </div>
         </div>
+      </div>
+      <div className="mt-8 text-center">
+        <Link
+          href="/clinics"
+          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all"
+        >
+          <i className="fas fa-arrow-left mr-2"></i>
+          Back to Clinics
+        </Link>
       </div>
     </div>
   );
