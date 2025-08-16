@@ -29,6 +29,7 @@ export default function Navigation() {
     { href: '/my-bookings', icon: 'fas fa-calendar-check', label: 'Bookings' },
     { href: '/risk-alerts', icon: 'fas fa-bell', label: getTranslation('alerts', currentLanguage) },
     { href: '/preventive-care', icon: 'fas fa-gamepad', label: getTranslation('challenges', currentLanguage) },
+    { href: '/profile', icon: 'fas fa-user', label: 'My Profile' },
   ];
 
   const handleLogout = async () => {
@@ -78,8 +79,8 @@ export default function Navigation() {
         </div>
       )}
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-200 z-40">
-        <div className="grid grid-cols-7 h-20">
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-gray-200 z-40">
+        <div className="grid grid-cols-8 h-20">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -109,7 +110,7 @@ export default function Navigation() {
                 
                 {/* Active Indicator */}
                 {isActive && (
-                  <div className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                  <div className="absolute -bottom-0.5 left-1/2 transform -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
                 )}
               </Link>
             );

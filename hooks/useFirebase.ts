@@ -4,7 +4,9 @@ import {
   createUserWithEmailAndPassword, 
   signOut, 
   onAuthStateChanged,
-  User
+  User,
+  updateProfile,
+  deleteUser
 } from 'firebase/auth';
 import { 
   doc, 
@@ -24,16 +26,7 @@ export const useFirebase = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Only run auth state listener if Firebase is initialized
-    if (!auth) {
-      console.log('Firebase auth not initialized');
-      setLoading(false);
-      return;
-    }
-
-    console.log('Setting up auth state listener');
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log('Auth state changed:', user ? 'User logged in' : 'No user');
       setUser(user);
       setLoading(false);
     }, (error) => {
@@ -45,20 +38,11 @@ export const useFirebase = () => {
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    console.log('SignIn called with email:', email);
-    
-    if (!auth) {
-      console.error('Firebase auth not initialized');
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
-      console.log('Attempting Firebase signin...');
       const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log('Firebase signin successful:', result.user.uid);
       return { success: true, user: result.user };
     } catch (error: any) {
-      console.error('Firebase signin error:', error);
+      console.error('Sign in error:', error);
       let errorMessage = 'Sign in failed';
       
       if (error.code === 'auth/user-not-found') {
@@ -69,6 +53,8 @@ export const useFirebase = () => {
         errorMessage = 'Invalid email address';
       } else if (error.code === 'auth/too-many-requests') {
         errorMessage = 'Too many failed attempts. Please try again later';
+      } else if (error.code === 'auth/network-request-failed') {
+        errorMessage = 'Network connection failed. Please check your internet connection.';
       } else {
         errorMessage = error.message || 'Sign in failed. Please try again';
       }
@@ -78,37 +64,25 @@ export const useFirebase = () => {
   };
 
   const signUp = async (email: string, password: string, additionalData?: any) => {
-    console.log('SignUp called with email:', email);
-    
-    if (!auth || !db) {
-      console.error('Firebase not initialized - auth:', !!auth, 'db:', !!db);
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
-      console.log('Attempting Firebase user creation...');
       const result = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('Firebase user created successfully:', result.user.uid);
       
       // Save additional user data to Firestore
       if (additionalData && result.user) {
         try {
-          console.log('Saving user data to Firestore...');
           await setDoc(doc(db, 'users', result.user.uid), {
             email: result.user.email,
             createdAt: new Date(),
             ...additionalData
           });
-          console.log('User data saved to Firestore successfully');
         } catch (firestoreError: any) {
           console.error('Firestore error:', firestoreError);
-          // Don't fail the signup if Firestore fails, just log it
         }
       }
       
       return { success: true, user: result.user };
     } catch (error: any) {
-      console.error('Firebase signup error:', error);
+      console.error('Sign up error:', error);
       let errorMessage = 'Sign up failed';
       
       if (error.code === 'auth/email-already-in-use') {
@@ -128,10 +102,6 @@ export const useFirebase = () => {
   };
 
   const logout = async () => {
-    if (!auth) {
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
       await signOut(auth);
       return { success: true };
@@ -141,10 +111,6 @@ export const useFirebase = () => {
   };
 
   const createDocument = async (collectionName: string, data: any) => {
-    if (!db) {
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
       const docRef = await addDoc(collection(db, collectionName), data);
       return { success: true, id: docRef.id };
@@ -154,10 +120,6 @@ export const useFirebase = () => {
   };
 
   const updateDocument = async (collectionName: string, id: string, data: any) => {
-    if (!db) {
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
       await updateDoc(doc(db, collectionName, id), data);
       return { success: true };
@@ -167,10 +129,6 @@ export const useFirebase = () => {
   };
 
   const getDocument = async (collectionName: string, id: string) => {
-    if (!db) {
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
       const docSnap = await getDoc(doc(db, collectionName, id));
       if (docSnap.exists()) {
@@ -184,10 +142,6 @@ export const useFirebase = () => {
   };
 
   const queryDocuments = async (collectionName: string, field: string, operator: any, value: any) => {
-    if (!db) {
-      return { success: false, error: 'Firebase not initialized' };
-    }
-
     try {
       const q = query(collection(db, collectionName), where(field, operator, value));
       const querySnapshot = await getDocs(q);
@@ -201,5 +155,65 @@ export const useFirebase = () => {
     }
   };
 
-  return { user, loading, signIn, signUp, logout, createDocument, updateDocument, getDocument, queryDocuments };
+  const updateUserProfile = async (profileData: { displayName?: string; phoneNumber?: string }) => {
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    try {
+      // Update Firebase Auth profile
+      if (profileData.displayName) {
+        await updateProfile(user, {
+          displayName: profileData.displayName
+        });
+      }
+
+      // Update additional data in Firestore
+      await updateDoc(doc(db, 'users', user.uid), {
+        ...profileData,
+        updatedAt: new Date()
+      });
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      throw new Error(error.message || 'Failed to update profile');
+    }
+  };
+
+  const deleteAccount = async () => {
+    if (!user) {
+      throw new Error('No user logged in');
+    }
+
+    try {
+      // Delete user data from Firestore first
+      await setDoc(doc(db, 'users', user.uid), {
+        deletedAt: new Date(),
+        deleted: true
+      });
+
+      // Delete the user account
+      await deleteUser(user);
+      
+      return { success: true };
+    } catch (error: any) {
+      console.error('Account deletion error:', error);
+      throw new Error(error.message || 'Failed to delete account');
+    }
+  };
+
+  return { 
+    user, 
+    loading, 
+    signIn, 
+    signUp, 
+    logout, 
+    createDocument, 
+    updateDocument, 
+    getDocument, 
+    queryDocuments,
+    updateUserProfile,
+    deleteAccount
+  };
 }; 

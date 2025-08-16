@@ -31,10 +31,10 @@ export default function RootLayout({
       </head>
       <body className={`${poppins.variable} font-poppins antialiased bg-white`}>
         <AuthGuard>
-          <div className="min-h-screen pb-20">
+          <Navigation />
+          <div className="min-h-screen pt-20">
             {children}
           </div>
-          <Navigation />
         </AuthGuard>
       </body>
     </html>

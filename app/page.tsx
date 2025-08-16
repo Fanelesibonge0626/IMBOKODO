@@ -42,7 +42,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 overflow-hidden">
+      <div className="relative py-20 bg-gradient-to-br from-purple-900 via-purple-700 to-pink-600 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-black/20"></div>
         <div
@@ -66,23 +66,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Floating Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Health Shield */}
-          <div className="absolute top-20 right-20 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float">
-            <span className="text-white/90 font-medium">🛡️ Your SheCare</span>
-          </div>
 
-          {/* Cycle Tracker */}
-          <div className="absolute top-40 right-40 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float-delayed">
-            <span className="text-white/90 font-medium">📅 Cycle Tracker</span>
-          </div>
-
-          {/* Clinics */}
-          <div className="absolute top-60 right-60 bg-white/10 backdrop-blur-sm rounded-full p-4 animate-float">
-            <span className="text-white/90 font-medium">🏥 Clinics</span>
-          </div>
-        </div>
 
         {/* Main Content */}
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">

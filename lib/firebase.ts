@@ -1,53 +1,24 @@
+// Fresh Firebase Configuration for SheTech Project
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-// Only initialize Firebase on the client side
-let app: any = null;
-let auth: any = null;
-let db: any = null;
-let storage: any = null;
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB8pveRiKbJZShCVnW5WlxNbsTOAIFhsq4",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "myweb-c4c25.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "myweb-c4c25",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "myweb-c4c25.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "413167663570",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:413167663570:web:d755c70c18babd728b700b"
+};
 
-console.log('Firebase initialization starting...');
-console.log('Window object exists:', typeof window !== 'undefined');
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-if (typeof window !== 'undefined') {
-  console.log('Initializing Firebase...');
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyB8pveRiKbJZShCVnW5WlxNbsTOAIFhsq4",
-    authDomain: "myweb-c4c25.firebaseapp.com",
-    projectId: "myweb-c4c25",
-    storageBucket: "myweb-c4c25.appspot.com",
-    messagingSenderId: "413167663570",
-    appId: "1:413167663570:web:d755c70c18babd728b700b"
-  };
+// Initialize Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
 
-  console.log('Firebase config:', { ...firebaseConfig, apiKey: 'HIDDEN' });
-
-  try {
-    // Initialize Firebase
-    app = initializeApp(firebaseConfig);
-    console.log('Firebase app initialized successfully');
-
-    // Initialize Firebase services
-    auth = getAuth(app);
-    console.log('Firebase auth initialized:', !!auth);
-    
-    db = getFirestore(app);
-    console.log('Firebase Firestore initialized:', !!db);
-    
-    storage = getStorage(app);
-    console.log('Firebase storage initialized:', !!storage);
-    
-    console.log('Firebase initialization complete!');
-  } catch (error) {
-    console.error('Firebase initialization error:', error);
-  }
-} else {
-  console.log('Firebase not initialized - not in browser environment');
-}
-
-export { auth, db, storage };
 export default app; 
