@@ -11,14 +11,12 @@ let storage: any = null;
 
 console.log('Firebase initialization starting...');
 console.log('Window object exists:', typeof window !== 'undefined');
-console.log('API Key exists:', !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
-console.log('API Key value:', process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'Set' : 'Not set');
 
-if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+if (typeof window !== 'undefined') {
   console.log('Initializing Firebase...');
   
   const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    apiKey: "AIzaSyB8pveRiKbJZShCVnW5WlxNbsTOAIFhsq4",
     authDomain: "myweb-c4c25.firebaseapp.com",
     projectId: "myweb-c4c25",
     storageBucket: "myweb-c4c25.appspot.com",
@@ -48,13 +46,7 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
     console.error('Firebase initialization error:', error);
   }
 } else {
-  console.log('Firebase not initialized - missing requirements');
-  if (typeof window === 'undefined') {
-    console.log('Reason: Not in browser environment');
-  }
-  if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
-    console.log('Reason: Missing NEXT_PUBLIC_FIREBASE_API_KEY');
-  }
+  console.log('Firebase not initialized - not in browser environment');
 }
 
 export { auth, db, storage };
