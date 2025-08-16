@@ -27,6 +27,7 @@ export default function Navigation() {
     { href: '/ai-health', icon: 'fas fa-brain', label: getTranslation('aiHealth', currentLanguage) },
     { href: '/clinics', icon: 'fas fa-map-marked-alt', label: 'HealthCare' },
     { href: '/my-bookings', icon: 'fas fa-calendar-check', label: 'Bookings' },
+    { href: '/pregnancy-tracker', icon: 'fas fa-baby', label: 'Pregnancy' },
     { href: '/risk-alerts', icon: 'fas fa-bell', label: getTranslation('alerts', currentLanguage) },
     { href: '/preventive-care', icon: 'fas fa-gamepad', label: getTranslation('challenges', currentLanguage) },
     { href: '/profile', icon: 'fas fa-user', label: 'My Profile' },
