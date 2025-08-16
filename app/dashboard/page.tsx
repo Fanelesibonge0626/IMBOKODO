@@ -85,13 +85,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
-            <h3 className="text-xl font-semibold text-white mb-3">Community</h3>
+            <h3 className="text-xl font-semibold text-white mb-3">Clinics</h3>
             <p className="text-white/80 mb-4">Connect with other women in the community</p>
             <button 
-              onClick={() => router.push('/community')}
+              onClick={() => router.push('/clinics')}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Join Community
+              View Clinics
             </button>
           </div>
 

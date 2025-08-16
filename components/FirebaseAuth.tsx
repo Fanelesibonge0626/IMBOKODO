@@ -42,60 +42,48 @@ export default function FirebaseAuth() {
         }
       } else {
         console.log('Attempting signin...');
-        console.log('Selected role:', userRole);
         
-        if (userRole === 'admin') {
-          console.log('Admin role selected, checking admin credentials...');
+        // Check if this is an admin login (automatic detection)
+        const ADMIN_CREDENTIALS = {
+          email: 'admin@durbanwomensclinic.co.za',
+          password: 'admin123'
+        };
+        
+        console.log('Checking credentials...');
+        console.log('Input email:', email);
+        console.log('Input password:', password);
+        
+        // Check if admin credentials are used
+        if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+          console.log('Admin login detected, setting admin session...');
           
-          // Check if this is an admin login
-          const ADMIN_CREDENTIALS = {
-            email: 'admin@durbanwomensclinic.co.za',
-            password: 'admin123'
-          };
-          
-          console.log('Checking admin credentials...');
-          console.log('Input email:', email);
-          console.log('Input password:', password);
-          console.log('Admin email:', ADMIN_CREDENTIALS.email);
-          console.log('Admin password:', ADMIN_CREDENTIALS.password);
-          console.log('Email match:', email === ADMIN_CREDENTIALS.email);
-          console.log('Password match:', password === ADMIN_CREDENTIALS.password);
-          
-          if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-            console.log('Admin login detected, setting admin session...');
+          try {
+            // Set admin session
+            const adminSession = {
+              isAdmin: true,
+              email: email,
+              clinic: 'Durban Women\'s Health Clinic',
+              loginTime: new Date().toISOString()
+            };
             
-            try {
-              // Set admin session
-              const adminSession = {
-                isAdmin: true,
-                email: email,
-                clinic: 'Durban Women\'s Health Clinic',
-                loginTime: new Date().toISOString()
-              };
-              
-              localStorage.setItem('shecare-admin-session', JSON.stringify(adminSession));
-              console.log('Admin session set successfully:', adminSession);
-              
-              // Clear any existing errors
-              setError('');
-              
-              // Redirect immediately without delay
-              console.log('Redirecting to admin panel...');
-              window.location.href = '/admin/durban-womens-clinic';
-              
-              return;
-            } catch (error) {
-              console.error('Error setting admin session:', error);
-              setError('Failed to set admin session. Please try again.');
-              return;
-            }
-          } else {
-            console.log('Invalid admin credentials');
-            setError('Invalid admin credentials. Please check your email and password.');
+            localStorage.setItem('shecare-admin-session', JSON.stringify(adminSession));
+            console.log('Admin session set successfully:', adminSession);
+            
+            // Clear any existing errors
+            setError('');
+            
+            // Redirect immediately without delay
+            console.log('Redirecting to admin panel...');
+            window.location.href = '/admin/durban-womens-clinic';
+            
+            return;
+          } catch (error) {
+            console.error('Error setting admin session:', error);
+            setError('Failed to set admin session. Please try again.');
             return;
           }
         } else {
-          console.log('Regular user role selected, proceeding with Firebase authentication...');
+          console.log('Regular user credentials, proceeding with Firebase authentication...');
           
           // Regular user authentication
           const result = await signIn(email, password);
@@ -157,7 +145,7 @@ export default function FirebaseAuth() {
         </div>
 
         {/* Role Selection */}
-        {!isSignUp && (
+        {!isSignUp && false && (
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-3 text-center">
               Select Your Role
@@ -212,7 +200,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              {userRole === 'admin' ? 'Admin Email' : 'Email Address'}
+              Email Address
             </label>
             <input
               type="email"
@@ -220,7 +208,7 @@ export default function FirebaseAuth() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder={userRole === 'admin' ? 'Enter admin email' : 'Enter your email'}
+              placeholder="Enter your email"
               required
               disabled={loading}
             />
@@ -228,7 +216,7 @@ export default function FirebaseAuth() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              {userRole === 'admin' ? 'Admin Password' : 'Password'}
+              Password
             </label>
             <input
               type="password"
@@ -236,7 +224,7 @@ export default function FirebaseAuth() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder={userRole === 'admin' ? 'Enter admin password' : 'Enter your password'}
+              placeholder="Enter your password"
               required
               disabled={loading}
             />
@@ -259,11 +247,7 @@ export default function FirebaseAuth() {
                 Processing...
               </div>
             ) : (
-              isSignUp 
-                ? 'Create Account' 
-                : userRole === 'admin' 
-                  ? 'Login as Admin' 
-                  : 'Sign In'
+              isSignUp ? 'Create Account' : 'Sign In'
             )}
           </button>
         </form>

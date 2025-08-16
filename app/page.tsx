@@ -104,10 +104,10 @@ export default function Home() {
               {getTranslation('getStarted', currentLanguage)}
             </Link>
             <Link
-              href="/community"
+              href="/clinics"
               className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/20 transition-all duration-300 border border-white/20"
             >
-              {getTranslation('learnMore', currentLanguage)}
+              View Clinics
             </Link>
           </div>
 
