@@ -228,16 +228,7 @@ export default function DashboardPage() {
             </button>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
-            <h3 className="text-xl font-semibold text-white mb-3">Voice Assistant</h3>
-            <p className="text-white/80 mb-4">Use voice commands for hands-free health assistance</p>
-            <button 
-              onClick={() => router.push('/voice')}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Voice Commands
-            </button>
-          </div>
+
 
           {/* Premium Features */}
           {isPremium ? (

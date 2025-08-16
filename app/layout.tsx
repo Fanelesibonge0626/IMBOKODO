@@ -14,7 +14,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "SheCare - Empowering Women in KwaZulu-Natal",
-  description: "Find Clinics, Track Your Cycle, Support Your Mind, and Share Your Voice — All Free",
+  description: "Find Clinics, Track Your Cycle, Support Your Mind — All Free",
 };
 
 export default function RootLayout({
