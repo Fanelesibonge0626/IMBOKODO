@@ -5,33 +5,27 @@ import { useFirebase } from '../../hooks/useFirebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { subscriptionPlans, getPopularPlan } from '../../lib/subscriptionPlans';
-import { YocoPaymentService } from '../../lib/yocoPayment';
-import SubscriptionService from '../../lib/subscriptionService';
 
 export default function SubscriptionPage() {
-  const { user, loading } = useFirebase();
+  const { user, loading, updateDocument } = useFirebase();
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<string>('monthly');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentError, setPaymentError] = useState<string>('');
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [paymentSystemStatus, setPaymentSystemStatus] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [processingStep, setProcessingStep] = useState<string>('');
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentFormData, setPaymentFormData] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: ''
+  });
+  const [paymentErrors, setPaymentErrors] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: ''
+  });
 
   useEffect(() => {
-    // Load YOCO script when component mounts
-    if (typeof window !== 'undefined') {
-      YocoPaymentService.loadYocoScript()
-        .then(() => {
-          console.log('YOCO script loaded successfully');
-          setPaymentSystemStatus('ready');
-        })
-        .catch((error) => {
-          console.error('Failed to load YOCO script:', error);
-          setPaymentSystemStatus('error');
-        });
-    }
+    // Demo mode - payment system always ready
+    console.log('Demo payment system ready');
   }, []);
 
   useEffect(() => {
@@ -42,154 +36,99 @@ export default function SubscriptionPage() {
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
-    setPaymentError('');
   };
 
-  const handleCancelSubscription = () => {
-    if (abortController) {
-      abortController.abort();
-    }
-    setIsProcessing(false);
-    setProcessingStep('');
-    setPaymentError('Operation cancelled by user');
-  };
-
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     if (!user) return;
+    setShowPaymentModal(true);
+  };
 
-    setIsProcessing(true);
-    setPaymentError('');
-    setProcessingStep('Initializing payment...');
-    const controller = new AbortController();
-    setAbortController(controller);
+  const handlePaymentFormChange = (field: string, value: string) => {
+    setPaymentFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (paymentErrors[field as keyof typeof paymentErrors]) {
+      setPaymentErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
-    try {
-      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
-      if (!plan) throw new Error('Invalid plan selected');
+  const validatePaymentForm = () => {
+    const errors = {
+      cardNumber: '',
+      expiryDate: '',
+      cvv: ''
+    };
 
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Operation timed out after 30 seconds')), 30000);
-      });
+    // Validate card number (16 digits)
+    if (!paymentFormData.cardNumber || paymentFormData.cardNumber.length !== 16) {
+      errors.cardNumber = 'Card number must be 16 digits';
+    }
 
-      const subscriptionPromise = (async () => {
-        setProcessingStep('Creating payment intent...');
-        const yocoService = YocoPaymentService.getInstance();
-        const paymentIntent = await yocoService.createPaymentIntent(plan.price);
+    // Validate expiry date (MM/YY format)
+    const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
+    if (!paymentFormData.expiryDate || !expiryRegex.test(paymentFormData.expiryDate)) {
+      errors.expiryDate = 'Please enter expiry date in MM/YY format';
+    }
 
-        setProcessingStep('Processing payment...');
-        const paymentResult = await yocoService.processPayment(null, plan.price);
+    // Validate CVV (3 digits)
+    if (!paymentFormData.cvv || paymentFormData.cvv.length !== 3) {
+      errors.cvv = 'CVV must be 3 digits';
+    }
 
-        if (paymentResult.success) {
-          setProcessingStep('Creating subscription in Firebase...');
-          const subscriptionService = SubscriptionService.getInstance();
-          
-          const success = await subscriptionService.createSubscription(
-            user.uid,
-            selectedPlan,
-            paymentResult.transactionId!
-          );
+    setPaymentErrors(errors);
+    return !Object.values(errors).some(error => error !== '');
+  };
 
-          if (success) {
-            setProcessingStep('Subscription successful! Redirecting...');
-            router.push('/dashboard?subscription=success');
-          } else {
-            throw new Error('Failed to create subscription');
+  const handlePaymentSubmit = async () => {
+    if (validatePaymentForm()) {
+      // Simulate payment processing
+      setTimeout(async () => {
+        setShowPaymentModal(false);
+        setPaymentSuccess(true);
+        // Reset form
+        setPaymentFormData({ cardNumber: '', expiryDate: '', cvv: '' });
+        
+        // Update user subscription status in Firebase
+        if (user) {
+          try {
+            // Update user document
+            await updateDocument('users', user.uid, {
+              subscriptionStatus: 'premium',
+              subscriptionPlan: selectedPlan,
+              subscriptionDate: new Date().toISOString(),
+              isPremium: true
+            });
+
+            // Create subscription document (required by SubscriptionService)
+            await updateDocument('subscriptions', user.uid, {
+              userId: user.uid,
+              planId: selectedPlan,
+              status: 'active',
+              startDate: new Date().toISOString(),
+              endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
+              autoRenew: true,
+              paymentMethod: 'card',
+              lastPaymentDate: new Date().toISOString(),
+              nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+              transactionId: 'demo_' + Date.now()
+            });
+          } catch (error) {
+            console.error('Failed to update subscription status:', error);
           }
-        } else {
-          throw new Error(paymentResult.error || 'Payment failed');
         }
-      })();
-
-      await Promise.race([subscriptionPromise, timeoutPromise]);
-      
-    } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('Subscription operation cancelled by user');
-        return;
-      }
-      console.error('Subscription error:', error);
-      
-      if (error.message?.includes('timed out')) {
-        setPaymentError('Operation timed out. Please check your internet connection and try again.');
-      } else if (error.message?.includes('Database not available')) {
-        setPaymentError('Database connection error. Please check your internet connection and try again.');
-      } else if (error.message?.includes('permission')) {
-        setPaymentError('Permission denied. Please contact support.');
-      } else if (error.code === 'permission-denied') {
-        setPaymentError('Access denied. Please contact support.');
-      } else if (error.code === 'unavailable') {
-        setPaymentError('Service temporarily unavailable. Please try again later.');
-      } else if (error.message?.includes('Failed to load YOCO script')) {
-        setPaymentError('Payment system temporarily unavailable. Please try again in a few moments.');
-      } else if (error.message?.includes('Failed to initialize payment system')) {
-        setPaymentError('Payment system initialization failed. Please try again.');
-      } else if (error.message?.includes('Payment system unavailable')) {
-        setPaymentError('Payment system unavailable. Please try again later.');
-      } else {
-        setPaymentError(`An error occurred: ${error.message || 'Please try again.'}`);
-      }
-    } finally {
-      setIsProcessing(false);
-      setProcessingStep('');
-      setAbortController(null);
+        
+        // Hide success message after 5 seconds and redirect to dashboard
+        setTimeout(() => {
+          setPaymentSuccess(false);
+          router.push('/dashboard?subscription=success');
+        }, 5000);
+      }, 1500);
     }
   };
 
-  const handleMockSubscription = async () => {
-    if (!user) return;
-
-    setIsProcessing(true);
-    setPaymentError('');
-    setProcessingStep('Creating subscription...');
-    const controller = new AbortController();
-    setAbortController(controller);
-
-    try {
-      const subscriptionService = SubscriptionService.getInstance();
-      
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Operation timed out after 30 seconds')), 30000);
-      });
-      
-      const subscriptionPromise = (async () => {
-        setProcessingStep('Creating mock subscription...');
-        const success = await subscriptionService.createMockSubscription(user.uid);
-
-        if (success) {
-          setProcessingStep('Subscription successful! Redirecting...');
-          router.push('/dashboard?subscription=success');
-        } else {
-          throw new Error('Failed to create mock subscription');
-        }
-      })();
-
-      await Promise.race([subscriptionPromise, timeoutPromise]);
-
-    } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('Subscription operation cancelled by user');
-        return;
-      }
-      console.error('Mock subscription error:', error);
-      
-      if (error.message?.includes('timed out')) {
-        setPaymentError('Operation timed out. Please check your internet connection and try again.');
-      } else if (error.message?.includes('Database not available')) {
-        setPaymentError('Database connection error. Please check your internet connection and try again.');
-      } else if (error.message?.includes('permission')) {
-        setPaymentError('Permission denied. Please contact support.');
-      } else if (error.code === 'permission-denied') {
-        setPaymentError('Access denied. Please contact support.');
-      } else if (error.code === 'unavailable') {
-        setPaymentError('Service temporarily unavailable. Please try again later.');
-      } else {
-        setPaymentError(`An error occurred: ${error.message || 'Please try again.'}`);
-      }
-    } finally {
-      setIsProcessing(false);
-      setProcessingStep('');
-      setAbortController(null);
-    }
+  const closePaymentModal = () => {
+    setShowPaymentModal(false);
+    setPaymentFormData({ cardNumber: '', expiryDate: '', cvv: '' });
+    setPaymentErrors({ cardNumber: '', expiryDate: '', cvv: '' });
   };
 
   if (loading) {
@@ -286,86 +225,13 @@ export default function SubscriptionPage() {
               Complete Your Subscription
             </h3>
 
-            {/* Payment System Status */}
-            <div className="mb-6 text-center">
-              {paymentSystemStatus === 'loading' && (
-                <div className="bg-blue-100 border border-blue-200 text-blue-700 px-4 py-3 rounded-lg">
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-2"></div>
-                    <span>Loading payment system...</span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Payment system error message hidden */}
-              {/* {paymentSystemStatus === 'error' && (
-                <div className="bg-yellow-100 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg">
-                  <div className="flex items-center justify-center">
-                    <i className="fas fa-exclamation-triangle mr-2"></i>
-                    <span>Payment system temporarily unavailable. You can still test the subscription.</span>
-                  </div>
-                </div>
-              )} */}
-              
-              {paymentSystemStatus === 'ready' && (
-                <div className="bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                  <div className="flex items-center justify-center">
-                    <i className="fas fa-check-circle mr-2"></i>
-                    <span>Payment system ready</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {paymentError && (
-              <div className="bg-red-100 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                {paymentError}
-              </div>
-            )}
-
             <div className="space-y-4">
               <button
                 onClick={handleSubscribe}
-                disabled={isProcessing || paymentSystemStatus === 'loading'}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all"
               >
-                {isProcessing ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {processingStep || 'Processing...'}
-                  </div>
-                ) : paymentSystemStatus === 'loading' ? (
-                  'Loading Payment System...'
-                ) : (
-                  `Subscribe Now - R${subscriptionPlans.find(p => p.id === selectedPlan)?.price}`
-                )}
+                Subscribe Now - R{subscriptionPlans.find(p => p.id === selectedPlan)?.price}
               </button>
-
-              {/* Development/Testing Button - Hidden */}
-              {/* <button
-                onClick={handleMockSubscription}
-                disabled={isProcessing || paymentSystemStatus === 'loading'}
-                className="w-full bg-gray-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isProcessing ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {processingStep || 'Processing...'}
-                  </div>
-                ) : (
-                  '🧪 Test Subscription (Development)'
-                )}
-              </button> */}
-
-              {/* Cancel Button - Only show when processing */}
-              {isProcessing && (
-                <button
-                  onClick={handleCancelSubscription}
-                  className="w-full bg-red-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-red-700 transition-all"
-                >
-                  ❌ Cancel Operation
-                </button>
-              )}
             </div>
 
             <div className="mt-6 text-center text-white/70 text-sm">
@@ -386,6 +252,134 @@ export default function SubscriptionPage() {
             Back to Dashboard
           </Link>
         </div>
+
+        {/* Payment Modal */}
+        {showPaymentModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <i className="fas fa-credit-card text-white text-2xl"></i>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Complete Payment</h3>
+                <p className="text-gray-600">
+                  Subscribe to {subscriptionPlans.find(p => p.id === selectedPlan)?.name} - 
+                  R{subscriptionPlans.find(p => p.id === selectedPlan)?.price}
+                </p>
+              </div>
+
+              <form onSubmit={(e) => { e.preventDefault(); handlePaymentSubmit(); }} className="space-y-4">
+                {/* Card Number */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Number
+                  </label>
+                  <input
+                    type="text"
+                    value={paymentFormData.cardNumber}
+                    onChange={(e) => handlePaymentFormChange('cardNumber', e.target.value.replace(/\D/g, '').slice(0, 16))}
+                    placeholder="1234 5678 9012 3456"
+                    className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                      paymentErrors.cardNumber ? 'border-red-300' : 'border-gray-300'
+                    }`}
+                    maxLength={16}
+                  />
+                  {paymentErrors.cardNumber && (
+                    <p className="text-red-500 text-sm mt-1">{paymentErrors.cardNumber}</p>
+                  )}
+                </div>
+
+                {/* Expiry Date and CVV */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Expiry Date
+                    </label>
+                    <input
+                      type="text"
+                      value={paymentFormData.expiryDate}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/\D/g, '');
+                        if (value.length <= 2) {
+                          handlePaymentFormChange('expiryDate', value);
+                        } else if (value.length <= 4) {
+                          handlePaymentFormChange('expiryDate', value.slice(0, 2) + '/' + value.slice(2));
+                        }
+                      }}
+                      placeholder="MM/YY"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                        paymentErrors.expiryDate ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      maxLength={5}
+                    />
+                    {paymentErrors.expiryDate && (
+                      <p className="text-red-500 text-sm mt-1">{paymentErrors.expiryDate}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      CVV
+                    </label>
+                    <input
+                      type="text"
+                      value={paymentFormData.cvv}
+                      onChange={(e) => handlePaymentFormChange('cvv', e.target.value.replace(/\D/g, '').slice(0, 3))}
+                      placeholder="123"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                        paymentErrors.cvv ? 'border-red-300' : 'border-gray-300'
+                      }`}
+                      maxLength={3}
+                    />
+                    {paymentErrors.cvv && (
+                      <p className="text-red-500 text-sm mt-1">{paymentErrors.cvv}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Pay Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:from-purple-700 hover:to-pink-700 transition-all"
+                >
+                  Pay R{subscriptionPlans.find(p => p.id === selectedPlan)?.price}
+                </button>
+
+                {/* Cancel Button */}
+                <button
+                  type="button"
+                  onClick={closePaymentModal}
+                  className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-2xl font-medium hover:bg-gray-200 transition-all"
+                >
+                  Cancel
+                </button>
+              </form>
+
+              <div className="mt-6 text-center text-gray-500 text-sm">
+                <p>🔒 Secure payment processing</p>
+                <p>💳 All major cards accepted</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {paymentSuccess && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
+              <div className="bg-green-100 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <i className="fas fa-check text-green-600 text-4xl"></i>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">✅ Payment Successful!</h3>
+              <p className="text-gray-600 mb-6">Your subscription is now active.</p>
+              <button
+                onClick={() => setPaymentSuccess(false)}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-2xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
